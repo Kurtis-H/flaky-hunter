@@ -110,5 +110,11 @@ def order_runs(runs: list[Run]) -> list[Run]:
     """Oldest first. Uses report timestamps when every run has one, otherwise file names."""
     if runs and all(r.timestamp for r in runs):
         # Normalise naive and aware datetimes so they compare cleanly.
-        return sorted(runs, key=lambda r: (r.timestamp.replace(tzinfo=None), r.source))
+        return sorted(
+            runs,
+            key=lambda r: (
+                r.timestamp.replace(tzinfo=None) if r.timestamp else datetime.min,
+                r.source,
+            ),
+        )
     return sorted(runs, key=lambda r: r.source)
