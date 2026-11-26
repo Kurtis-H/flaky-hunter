@@ -1,0 +1,90 @@
+name: flaky-hunter
+description: Find flaky tests by comparing JUnit XML reports across CI runs.
+branding:
+  icon: repeat
+  color: orange
+
+inputs:
+  junit:
+    description: Path or glob to THIS run's JUnit XML report(s)
+    required: true
+  history-size:
+    description: How many past runs to keep and compare
+    default: "30"
+  min-runs:
+    description: Runs needed before a test is judged
+    default: "3"
+  fail-on-flaky:
+    description: Fail the step if any flaky test is found
+    default: "false"
+  cache-key-prefix:
+    description: Change this to keep separate histories (e.g. per test suite)
+    default: flaky-hunter-history
+
+outputs:
+  report:
+    description: Path to the markdown report
+    value: ${{ steps.run.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install flaky-hunter
+      shell: bash
+      run: pip install --quiet "${{ github.action_path }}"
+
+    # History lives in the Actions cache: restore the newest copy, add this run, save a new copy.
+    - name: Restore run history
+      uses: actions/cache/restore@v4
+      with:
+        path: .flaky-history
+        key: ${{ inputs.cache-key-prefix }}-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
+          ${{ inputs.cache-key-prefix }}-${{ github.ref_name }}-
+          ${{ inputs.cache-key-prefix }}-main-
+
+    - name: Add this run and analyze
+      id: run
+      shell: bash
+      env:
+        JUNIT: ${{ inputs.junit }}
+        HISTORY_SIZE: ${{ inputs.history-size }}
+        MIN_RUNS: ${{ inputs.min-runs }}
+        FAIL_ON_FLAKY: ${{ inputs.fail-on-flaky }}
+      run: |
+        mkdir -p .flaky-history
+        n=0
+        shopt -s globstar nullglob
+        for f in $JUNIT; do
+          n=$((n + 1))
+          cp "$f" ".flaky-history/run-$(printf '%012d' "$GITHUB_RUN_NUMBER")-$GITHUB_RUN_ATTEMPT-$n.xml"
+        done
+        [ "$n" -gt 0 ] || { echo "::warning::flaky-hunter: no JUnit files matched '$JUNIT'"; exit 0; }
+        # Keep only the newest runs (file names sort by run number).
+        ls -1 .flaky-history/*.xml | sort | head -n "-$HISTORY_SIZE" | xargs -r rm --
+        extra=()
+        [ "$FAIL_ON_FLAKY" = "true" ] && extra+=(--fail-on-flaky)
+        status=0
+        flaky-hunter .flaky-history --format markdown --min-runs "$MIN_RUNS" \
+          -o flaky-report.md "${extra[@]}" || status=$?
+        cat flaky-report.md >> "$GITHUB_STEP_SUMMARY"
+        echo "report=flaky-report.md" >> "$GITHUB_OUTPUT"
+        echo "status=$status" >> "$GITHUB_OUTPUT"
+
+    - name: Save run history
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: .flaky-history
+        key: ${{ inputs.cache-key-prefix }}-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+    - name: Apply result
+      if: steps.run.outputs.status != '' && steps.run.outputs.status != '0'
+      shell: bash
+      run: |
+        echo "::error::flaky-hunter found flaky tests (see job summary)"
+        exit ${{ steps.run.outputs.status }}

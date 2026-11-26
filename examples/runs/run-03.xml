@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="7" failures="3" timestamp="2026-11-02T03:00:00">
+    <testcase classname="tests.api.products" name="test_lists_products" time="0.441"/>
+    <testcase classname="tests.api.products" name="test_search_filters" time="1.085"/>
+    <testcase classname="tests.api.orders" name="test_read_own_order" time="0.731"/>
+    <testcase classname="tests.ui.shop" name="test_search_narrows_list" time="0.875">
+      <failure message="TimeoutError: locator.click: Timeout 5097ms exceeded">TimeoutError: locator.click: Timeout 5097ms exceeded</failure>
+    </testcase>
+    <testcase classname="tests.ui.chat" name="test_chat_replies" time="0.287">
+      <failure message="AssertionError: expected chat log to contain 'ShopBot:'">AssertionError: expected chat log to contain 'ShopBot:'</failure>
+    </testcase>
+    <testcase classname="tests.api.reviews" name="test_post_review" time="2.126"/>
+    <testcase classname="tests.api.auth" name="test_token_expiry" time="0.698">
+      <failure message="AssertionError: token still valid after 3677s">AssertionError: token still valid after 3677s</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

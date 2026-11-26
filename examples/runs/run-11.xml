@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="7" failures="3" timestamp="2026-11-04T03:00:00">
+    <testcase classname="tests.api.products" name="test_lists_products" time="1.405"/>
+    <testcase classname="tests.api.products" name="test_search_filters" time="2.359"/>
+    <testcase classname="tests.api.orders" name="test_read_own_order" time="1.717"/>
+    <testcase classname="tests.ui.shop" name="test_search_narrows_list" time="1.890">
+      <failure message="TimeoutError: locator.click: Timeout 5068ms exceeded">TimeoutError: locator.click: Timeout 5068ms exceeded</failure>
+    </testcase>
+    <testcase classname="tests.ui.chat" name="test_chat_replies" time="0.883"/>
+    <testcase classname="tests.api.reviews" name="test_post_review" time="0.769">
+      <failure message="AssertionError: expected status 201, got 500">AssertionError: expected status 201, got 500</failure>
+    </testcase>
+    <testcase classname="tests.api.auth" name="test_token_expiry" time="1.162">
+      <failure message="AssertionError: token still valid after 3620s">AssertionError: token still valid after 3620s</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

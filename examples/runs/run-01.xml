@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="7" failures="2" timestamp="2026-11-01T15:00:00">
+    <testcase classname="tests.api.products" name="test_lists_products" time="1.617"/>
+    <testcase classname="tests.api.products" name="test_search_filters" time="0.111"/>
+    <testcase classname="tests.api.orders" name="test_read_own_order" time="0.724"/>
+    <testcase classname="tests.ui.shop" name="test_search_narrows_list" time="0.301">
+      <failure message="TimeoutError: locator.click: Timeout 5094ms exceeded">TimeoutError: locator.click: Timeout 5094ms exceeded</failure>
+    </testcase>
+    <testcase classname="tests.ui.chat" name="test_chat_replies" time="1.386"/>
+    <testcase classname="tests.api.reviews" name="test_post_review" time="1.497"/>
+    <testcase classname="tests.api.auth" name="test_token_expiry" time="0.123">
+      <failure message="AssertionError: token still valid after 3604s">AssertionError: token still valid after 3604s</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

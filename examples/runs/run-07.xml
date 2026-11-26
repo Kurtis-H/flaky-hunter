@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="7" failures="1" timestamp="2026-11-03T03:00:00">
+    <testcase classname="tests.api.products" name="test_lists_products" time="2.474"/>
+    <testcase classname="tests.api.products" name="test_search_filters" time="1.618"/>
+    <testcase classname="tests.api.orders" name="test_read_own_order" time="1.415"/>
+    <testcase classname="tests.ui.shop" name="test_search_narrows_list" time="2.115"/>
+    <testcase classname="tests.ui.chat" name="test_chat_replies" time="0.611"/>
+    <testcase classname="tests.api.reviews" name="test_post_review" time="0.129"/>
+    <testcase classname="tests.api.auth" name="test_token_expiry" time="1.033">
+      <failure message="AssertionError: token still valid after 3640s">AssertionError: token still valid after 3640s</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
