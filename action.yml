@@ -39,7 +39,7 @@ runs:
 
     # History lives in the Actions cache: restore the newest copy, add this run, save a new copy.
     - name: Restore run history
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v6
       with:
         path: .flaky-history
         key: ${{ inputs.cache-key-prefix }}-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -77,7 +77,7 @@ runs:
 
     - name: Save run history
       if: always()
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v6
       with:
         path: .flaky-history
         key: ${{ inputs.cache-key-prefix }}-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
