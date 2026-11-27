@@ -11,9 +11,9 @@ $ flaky-hunter examples/runs
 12 runs, 7 tests, 4 flaky or failing
 
 [    flaky] tests.ui.shop::test_search_narrows_list  fail=50% flip=45%  ❌✅❌✅✅✅✅❌❌✅
-[    flaky] tests.ui.chat::test_chat_replies        fail=17% flip=36%  ❌✅✅✅✅✅✅❌✅✅
-[regressed] tests.api.reviews::test_post_review     fail=42% flip=9%   ✅✅✅✅✅❌❌❌❌❌
-[   broken] tests.api.auth::test_token_expiry       fail=100% flip=0%  ❌❌❌❌❌❌❌❌❌❌
+[    flaky] tests.ui.chat::test_chat_replies  fail=17% flip=36%  ❌✅✅✅✅✅✅❌✅✅
+[regressed] tests.api.reviews::test_post_review  fail=42% flip=9%   ✅✅✅✅✅❌❌❌❌❌
+[   broken] tests.api.auth::test_token_expiry  fail=100% flip=0%  ❌❌❌❌❌❌❌❌❌❌
 ```
 
 ## Why fail rate alone isn't enough
@@ -60,13 +60,13 @@ One CI run only produces one report, so the Action keeps a **rolling history of 
 
 - name: Hunt flaky tests
   if: always()               # run even when tests fail - that's when it matters
-  uses: Kurtis-H/flaky-hunter@v0
+  uses: Kurtis-H/flaky-hunter@de3cd81c9aae1f802842c2e797214477e710e6a7 # main
   with:
     junit: reports/junit.xml
     history-size: 30
 ```
 
-The report appears in the job summary. To also post it as a PR comment:
+There's no release tag yet, so pin a commit from `main`, as above. The report appears in the job summary. To also post it as a PR comment:
 
 ```yaml
 - uses: marocchino/sticky-pull-request-comment@v2
